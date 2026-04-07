@@ -724,8 +724,9 @@
             '<div class="no-slots-msg">No available times on this date. Please try another day.</div>';
         }
       } catch (err) {
-        // If Apps Script isn't deployed yet, fall back to showing all slots
-        generateAllSlots();
+        // Apps Script not deployed yet — show setup message
+        timeGrid.innerHTML =
+          '<div class="no-slots-msg">Availability checking is not configured yet.<br>Please deploy the Google Apps Script first (see setup-guide.md).</div>';
       }
     }
 
@@ -754,37 +755,6 @@
 
         timeGrid.appendChild(label);
       });
-
-      timeSlotsWrap.classList.add("visible");
-    }
-
-    // ── Fallback: generate all slots (if Apps Script not yet deployed) ──
-    function generateAllSlots() {
-      timeGrid.innerHTML = "";
-      selectedTime = null;
-
-      var lastStartMinutes = (DAY_END_HOUR * 60) - selectedDuration;
-
-      for (var mins = DAY_START_HOUR * 60; mins <= lastStartMinutes; mins += SLOT_INCREMENT) {
-        var hour = Math.floor(mins / 60);
-        var min = mins % 60;
-        var time24 = formatTime24(hour, min);
-        var time12 = formatTime12(hour, min);
-
-        var label = document.createElement("label");
-        label.className = "time-slot";
-
-        label.innerHTML =
-          '<input type="radio" name="timeSlot" value="' + time24 + '">' +
-          '<span class="slot-check"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 7.5L5.5 11L12 3" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
-          '<span class="slot-label">' + time12 + '</span>';
-
-        label.querySelector("input").addEventListener("change", function () {
-          selectedTime = this.value;
-        });
-
-        timeGrid.appendChild(label);
-      }
 
       timeSlotsWrap.classList.add("visible");
     }

@@ -186,13 +186,17 @@ function fetchOutlookBusyTimes(dateStr) {
 }
 
 // ── Parse ICS content into event objects ───────────────────────
+// Handles single events and expands recurring events (RRULE)
 function parseICS(icsText) {
   var events = [];
-  var lines = icsText.replace(/\r\n /g, "").replace(/\r/g, "\n").split("\n");
+  // Unfold continuation lines (lines starting with space/tab are continuations)
+  var lines = icsText.replace(/\r\n[ \t]/g, "").replace(/\r\n/g, "\n").replace(/\r/g, "\n").split("\n");
 
   var inEvent = false;
   var dtStart = null;
   var dtEnd = null;
+  var rrule = null;
+  var exdates = [];
 
   for (var i = 0; i < lines.length; i++) {
     var line = lines[i].trim();
@@ -201,12 +205,22 @@ function parseICS(icsText) {
       inEvent = true;
       dtStart = null;
       dtEnd = null;
+      rrule = null;
+      exdates = [];
       continue;
     }
 
     if (line === "END:VEVENT") {
       if (inEvent && dtStart && dtEnd) {
-        events.push({ start: dtStart, end: dtEnd });
+        if (rrule) {
+          // Expand recurring event into individual occurrences
+          var expanded = expandRRule(dtStart, dtEnd, rrule, exdates);
+          for (var e = 0; e < expanded.length; e++) {
+            events.push(expanded[e]);
+          }
+        } else {
+          events.push({ start: dtStart, end: dtEnd });
+        }
       }
       inEvent = false;
       continue;
@@ -218,23 +232,166 @@ function parseICS(icsText) {
       dtStart = parseICSDate(line);
     } else if (line.indexOf("DTEND") === 0) {
       dtEnd = parseICSDate(line);
+    } else if (line.indexOf("RRULE:") === 0) {
+      rrule = line.substring(6);
+    } else if (line.indexOf("EXDATE") === 0) {
+      var exVal = line.substring(line.lastIndexOf(":") + 1).trim();
+      // EXDATE can have multiple comma-separated dates
+      var exParts = exVal.split(",");
+      for (var x = 0; x < exParts.length; x++) {
+        var exTs = parseICSDateValue(exParts[x].trim());
+        if (exTs) exdates.push(exTs);
+      }
     }
   }
 
   return events;
 }
 
-// ── Parse an ICS date line into a timestamp ────────────────────
-// Handles formats like:
-//   DTSTART:20260415T130000Z
-//   DTSTART;TZID=America/New_York:20260415T130000
-//   DTSTART;VALUE=DATE:20260415
+// ── Expand a recurring event using RRULE ───────────────────────
+// Supports FREQ=DAILY, WEEKLY, MONTHLY, YEARLY with COUNT, UNTIL, INTERVAL, BYDAY
+function expandRRule(dtStart, dtEnd, rruleStr, exdates) {
+  var results = [];
+  var duration = dtEnd - dtStart;
+
+  // Parse RRULE parameters
+  var params = {};
+  var parts = rruleStr.split(";");
+  for (var p = 0; p < parts.length; p++) {
+    var kv = parts[p].split("=");
+    if (kv.length === 2) params[kv[0]] = kv[1];
+  }
+
+  var freq     = params["FREQ"] || "";
+  var interval = parseInt(params["INTERVAL"] || "1", 10);
+  var count    = params["COUNT"] ? parseInt(params["COUNT"], 10) : null;
+  var until    = params["UNTIL"] ? parseICSDateValue(params["UNTIL"]) : null;
+  var byday    = params["BYDAY"] ? params["BYDAY"].split(",") : null;
+
+  // Map day abbreviations to JS getDay() values
+  var dayMap = { "SU": 0, "MO": 1, "TU": 2, "WE": 3, "TH": 4, "FR": 5, "SA": 6 };
+
+  // Limit expansion to 1 year out to avoid infinite loops
+  var maxDate = new Date();
+  maxDate.setFullYear(maxDate.getFullYear() + 1);
+  var maxTs = maxDate.getTime();
+  if (until && until < maxTs) maxTs = until;
+
+  var startDate = new Date(dtStart);
+  var occurrences = 0;
+  var maxOccurrences = count || 365; // safety limit
+
+  if (freq === "WEEKLY") {
+    // For WEEKLY with BYDAY, iterate week by week and check each day
+    var targetDays = [];
+    if (byday) {
+      for (var bd = 0; bd < byday.length; bd++) {
+        var dayCode = byday[bd].replace(/[^A-Z]/g, "");
+        if (dayMap[dayCode] !== undefined) targetDays.push(dayMap[dayCode]);
+      }
+    } else {
+      targetDays.push(startDate.getDay());
+    }
+
+    // Start from the week of the original event
+    var cursor = new Date(startDate);
+    // Go to the start of the week (Sunday)
+    cursor.setDate(cursor.getDate() - cursor.getDay());
+    cursor.setHours(startDate.getHours(), startDate.getMinutes(), startDate.getSeconds(), 0);
+
+    while (cursor.getTime() <= maxTs && occurrences < maxOccurrences) {
+      for (var td = 0; td < targetDays.length; td++) {
+        var eventDate = new Date(cursor);
+        eventDate.setDate(cursor.getDate() + targetDays[td]);
+        eventDate.setHours(startDate.getHours(), startDate.getMinutes(), startDate.getSeconds(), 0);
+        var ts = eventDate.getTime();
+
+        if (ts < dtStart) continue;
+        if (ts > maxTs) break;
+        if (isExcluded(ts, exdates)) continue;
+
+        results.push({ start: ts, end: ts + duration });
+        occurrences++;
+        if (count && occurrences >= count) break;
+      }
+      if (count && occurrences >= count) break;
+      // Advance by interval weeks
+      cursor.setDate(cursor.getDate() + (7 * interval));
+    }
+
+  } else if (freq === "DAILY") {
+    var cursor = new Date(startDate);
+    while (cursor.getTime() <= maxTs && occurrences < maxOccurrences) {
+      var ts = cursor.getTime();
+      if (!isExcluded(ts, exdates)) {
+        if (byday) {
+          var dayCode2 = ["SU","MO","TU","WE","TH","FR","SA"][cursor.getDay()];
+          if (byday.indexOf(dayCode2) !== -1) {
+            results.push({ start: ts, end: ts + duration });
+            occurrences++;
+          }
+        } else {
+          results.push({ start: ts, end: ts + duration });
+          occurrences++;
+        }
+      }
+      cursor.setDate(cursor.getDate() + interval);
+    }
+
+  } else if (freq === "MONTHLY") {
+    var cursor = new Date(startDate);
+    while (cursor.getTime() <= maxTs && occurrences < maxOccurrences) {
+      var ts = cursor.getTime();
+      if (!isExcluded(ts, exdates)) {
+        results.push({ start: ts, end: ts + duration });
+        occurrences++;
+      }
+      cursor.setMonth(cursor.getMonth() + interval);
+    }
+
+  } else if (freq === "YEARLY") {
+    var cursor = new Date(startDate);
+    while (cursor.getTime() <= maxTs && occurrences < maxOccurrences) {
+      var ts = cursor.getTime();
+      if (!isExcluded(ts, exdates)) {
+        results.push({ start: ts, end: ts + duration });
+        occurrences++;
+      }
+      cursor.setFullYear(cursor.getFullYear() + interval);
+    }
+
+  } else {
+    // Unknown freq — just return the single instance
+    results.push({ start: dtStart, end: dtEnd });
+  }
+
+  return results;
+}
+
+// ── Check if a timestamp is in the exclusion list ──────────────
+function isExcluded(ts, exdates) {
+  // Compare dates only (ignore time component for EXDATE matching)
+  var d = new Date(ts);
+  var dateOnly = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  for (var i = 0; i < exdates.length; i++) {
+    var exd = new Date(exdates[i]);
+    var exDateOnly = new Date(exd.getFullYear(), exd.getMonth(), exd.getDate()).getTime();
+    if (dateOnly === exDateOnly) return true;
+  }
+  return false;
+}
+
+// ── Parse an ICS date line (e.g. "DTSTART;TZID=...:20260415T130000") ──
 function parseICSDate(line) {
-  // Extract the date value (everything after the last colon)
   var colonIdx = line.lastIndexOf(":");
   if (colonIdx === -1) return null;
   var value = line.substring(colonIdx + 1).trim();
+  return parseICSDateValue(value);
+}
 
+// ── Parse a raw ICS date value into a timestamp ────────────────
+// Handles: 20260415T130000Z, 20260415T130000, 20260415
+function parseICSDateValue(value) {
   if (!value) return null;
 
   // All-day event: YYYYMMDD
