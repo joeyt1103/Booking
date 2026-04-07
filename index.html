@@ -387,6 +387,32 @@
       margin-top:8px;
     }
 
+    .loading-slots{
+      text-align:center;
+      padding:20px;
+      color:var(--text-secondary);
+      font-weight:600;
+      font-size:15px;
+    }
+
+    .loading-slots .mini-spinner{
+      width:24px;
+      height:24px;
+      border:3px solid var(--border);
+      border-top:3px solid var(--acts-blue);
+      border-radius:50%;
+      animation:spin 0.8s linear infinite;
+      margin:0 auto 10px;
+    }
+
+    .no-slots-msg{
+      text-align:center;
+      padding:20px;
+      color:var(--text-secondary);
+      font-weight:600;
+      font-size:15px;
+    }
+
     /* Submit button */
     .submit-btn{
       display:block;
@@ -634,14 +660,15 @@
     // Replace this URL after deploying your Google Apps Script (see setup-guide.md)
     const GOOGLE_SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
 
-    const DAY_START_HOUR = 9;   // 9 AM
-    const DAY_END_HOUR = 17;    // 5 PM
+    const DAY_START_HOUR = 13;  // 1 PM
+    const DAY_END_HOUR = 16;    // 4 PM (last slot ends at 4 PM)
     const SLOT_INCREMENT = 30;  // minutes
     const MAX_DAYS_OUT = 60;
 
     // ── State ──────────────────────────────────────────────────────
     let selectedDuration = 30;
     let selectedTime = null;
+    let availableSlots = [];
 
     // ── DOM refs ───────────────────────────────────────────────────
     const form = document.getElementById("bookingForm");
@@ -677,20 +704,74 @@
       dateInput.max = formatDate(maxDate);
     }
 
-    // ── Generate time slots ────────────────────────────────────────
-    function generateTimeSlots() {
+    // ── Fetch available slots from Apps Script ─────────────────────
+    async function fetchAvailableSlots(dateStr) {
+      timeGrid.innerHTML =
+        '<div class="loading-slots"><div class="mini-spinner"></div>Checking availability...</div>';
+      timeSlotsWrap.classList.add("visible");
+
+      try {
+        const url = GOOGLE_SCRIPT_URL + "?action=availability&date=" +
+          encodeURIComponent(dateStr) + "&duration=" + selectedDuration;
+        const resp = await fetch(url);
+        const data = await resp.json();
+
+        if (data.available && data.available.length > 0) {
+          availableSlots = data.available;
+          renderTimeSlots(data.available);
+        } else {
+          timeGrid.innerHTML =
+            '<div class="no-slots-msg">No available times on this date. Please try another day.</div>';
+        }
+      } catch (err) {
+        // If Apps Script isn't deployed yet, fall back to showing all slots
+        generateAllSlots();
+      }
+    }
+
+    // ── Render only available time slots ───────────────────────────
+    function renderTimeSlots(slots) {
       timeGrid.innerHTML = "";
       selectedTime = null;
 
-      const lastStartMinutes = (DAY_END_HOUR * 60) - selectedDuration;
+      slots.forEach(function (time24) {
+        var parts = time24.split(":");
+        var hour = parseInt(parts[0], 10);
+        var min = parseInt(parts[1], 10);
+        var time12 = formatTime12(hour, min);
 
-      for (let mins = DAY_START_HOUR * 60; mins <= lastStartMinutes; mins += SLOT_INCREMENT) {
-        const hour = Math.floor(mins / 60);
-        const min = mins % 60;
-        const time24 = formatTime24(hour, min);
-        const time12 = formatTime12(hour, min);
+        var label = document.createElement("label");
+        label.className = "time-slot";
 
-        const label = document.createElement("label");
+        label.innerHTML =
+          '<input type="radio" name="timeSlot" value="' + time24 + '">' +
+          '<span class="slot-check"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 7.5L5.5 11L12 3" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+          '<span class="slot-label">' + time12 + '</span>';
+
+        label.querySelector("input").addEventListener("change", function () {
+          selectedTime = this.value;
+        });
+
+        timeGrid.appendChild(label);
+      });
+
+      timeSlotsWrap.classList.add("visible");
+    }
+
+    // ── Fallback: generate all slots (if Apps Script not yet deployed) ──
+    function generateAllSlots() {
+      timeGrid.innerHTML = "";
+      selectedTime = null;
+
+      var lastStartMinutes = (DAY_END_HOUR * 60) - selectedDuration;
+
+      for (var mins = DAY_START_HOUR * 60; mins <= lastStartMinutes; mins += SLOT_INCREMENT) {
+        var hour = Math.floor(mins / 60);
+        var min = mins % 60;
+        var time24 = formatTime24(hour, min);
+        var time12 = formatTime12(hour, min);
+
+        var label = document.createElement("label");
         label.className = "time-slot";
 
         label.innerHTML =
@@ -713,16 +794,16 @@
       radio.addEventListener("change", function () {
         selectedDuration = parseInt(this.value, 10);
         if (dateInput.value && !isWeekend(dateInput.value)) {
-          generateTimeSlots();
+          fetchAvailableSlots(dateInput.value);
         }
       });
     });
 
     // ── Date change ────────────────────────────────────────────────
     function isWeekend(dateStr) {
-      const parts = dateStr.split("-");
-      const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-      const day = d.getDay();
+      var parts = dateStr.split("-");
+      var d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+      var day = d.getDay();
       return day === 0 || day === 6;
     }
 
@@ -741,25 +822,25 @@
       }
 
       weekendMsg.style.display = "none";
-      generateTimeSlots();
+      fetchAvailableSlots(this.value);
     });
 
     // ── Form submit ────────────────────────────────────────────────
     form.addEventListener("submit", async function (e) {
       e.preventDefault();
 
-      const name = document.getElementById("nameInput").value.trim();
-      const email = document.getElementById("emailInput").value.trim();
-      const date = dateInput.value;
-      const notes = document.getElementById("notesInput").value.trim();
+      var name = document.getElementById("nameInput").value.trim();
+      var email = document.getElementById("emailInput").value.trim();
+      var date = dateInput.value;
+      var notes = document.getElementById("notesInput").value.trim();
 
       if (!name || !email || !date || !selectedTime) {
         alert("Please fill in all required fields and select a time slot.");
         return;
       }
 
-      const overlay = document.getElementById("processingOverlay");
-      const btn = form.querySelector("button");
+      var overlay = document.getElementById("processingOverlay");
+      var btn = form.querySelector("button");
       btn.disabled = true;
       overlay.style.display = "flex";
 
