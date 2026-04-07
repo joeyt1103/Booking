@@ -45,7 +45,6 @@
       overflow-x:hidden;
     }
 
-    /* Brand bar */
     .brand-bar{
       width:100%;
       height:5px;
@@ -53,7 +52,6 @@
       flex-shrink:0;
     }
 
-    /* Hero */
     .hero{
       width:100%;
       padding:60px 24px 48px;
@@ -64,482 +62,211 @@
     }
 
     .hero::before{
-      content:"";
-      position:absolute;
-      width:300px;
-      height:300px;
-      border-radius:50%;
-      background:rgba(255,255,255,0.04);
-      top:-80px;
-      right:-60px;
+      content:"";position:absolute;width:300px;height:300px;border-radius:50%;
+      background:rgba(255,255,255,0.04);top:-80px;right:-60px;
     }
 
     .hero::after{
-      content:"";
-      position:absolute;
-      width:200px;
-      height:200px;
-      border-radius:50%;
-      background:rgba(255,255,255,0.03);
-      bottom:-40px;
-      left:-40px;
+      content:"";position:absolute;width:200px;height:200px;border-radius:50%;
+      background:rgba(255,255,255,0.03);bottom:-40px;left:-40px;
     }
 
     .hero-content{
-      max-width:560px;
-      margin:0 auto;
-      position:relative;
-      z-index:1;
-      text-align:center;
-      opacity:0;
-      transform:translateY(16px);
+      max-width:560px;margin:0 auto;position:relative;z-index:1;text-align:center;
+      opacity:0;transform:translateY(16px);
       animation:fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 0.1s forwards;
     }
 
     .hero-icon{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width:80px;
-      height:80px;
-      border-radius:24px;
-      background:rgba(255,255,255,0.15);
-      margin-bottom:20px;
-      opacity:0;
+      display:inline-flex;align-items:center;justify-content:center;
+      width:80px;height:80px;border-radius:24px;background:rgba(255,255,255,0.15);
+      margin-bottom:20px;opacity:0;
       animation:fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
     }
 
-    .hero h1{
-      font-size:38px;
-      font-weight:800;
-      color:#fff;
-      letter-spacing:-0.5px;
-      margin-bottom:8px;
-      text-shadow:0 1px 4px rgba(0,0,0,0.1);
-    }
+    .hero h1{font-size:38px;font-weight:800;color:#fff;letter-spacing:-0.5px;margin-bottom:8px;text-shadow:0 1px 4px rgba(0,0,0,0.1)}
+    .hero .tagline{font-size:18px;font-weight:400;color:rgba(255,255,255,0.85);font-style:italic;letter-spacing:0.3px}
 
-    .hero .tagline{
-      font-size:18px;
-      font-weight:400;
-      color:rgba(255,255,255,0.85);
-      font-style:italic;
-      letter-spacing:0.3px;
-    }
-
-    /* Animations */
-    @keyframes fadeUp{
-      from{opacity:0;transform:translateY(16px)}
-      to{opacity:1;transform:translateY(0)}
-    }
-
-    @keyframes cardIn{
-      from{opacity:0;transform:translateY(16px) scale(0.96)}
-      to{opacity:1;transform:translateY(0) scale(1)}
-    }
-
-    @keyframes slideDown{
-      from{opacity:0;transform:translateY(-8px)}
-      to{opacity:1;transform:translateY(0)}
-    }
-
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes cardIn{from{opacity:0;transform:translateY(16px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+    @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
     @keyframes spin{to{transform:rotate(360deg)}}
-
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-
-    @keyframes popIn{
-      0%{transform:scale(0);opacity:0}
-      50%{transform:scale(1.15)}
-      100%{transform:scale(1);opacity:1}
-    }
-
+    @keyframes popIn{0%{transform:scale(0);opacity:0}50%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
     @keyframes drawCheck{to{stroke-dashoffset:0}}
+    @keyframes pageIn{to{opacity:1;transform:translateY(0)}}
 
-    @keyframes pageIn{
-      to{opacity:1;transform:translateY(0)}
-    }
-
-    /* Page container */
     .page{
-      flex:1;
-      max-width:560px;
-      width:100%;
-      margin:0 auto;
-      padding:20px 24px 40px;
+      flex:1;max-width:560px;width:100%;margin:0 auto;padding:20px 24px 40px;
       padding-bottom:calc(40px + var(--safe-bottom));
-      opacity:0;
-      transform:translateY(12px);
+      opacity:0;transform:translateY(12px);
       animation:pageIn 0.5s cubic-bezier(0.16,1,0.3,1) 0.2s forwards;
     }
 
-    /* Cards */
     .card{
-      background:var(--card);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:28px 24px;
-      margin-bottom:16px;
-      opacity:0;
-      animation:cardIn 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
+      background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+      padding:28px 24px;margin-bottom:16px;
+      opacity:0;animation:cardIn 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
     }
-
     .card:nth-child(1){animation-delay:0.25s}
     .card:nth-child(2){animation-delay:0.35s}
     .card:nth-child(3){animation-delay:0.45s}
 
-    .card-header{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin-bottom:22px;
-    }
-
-    .card-header-icon{
-      width:36px;
-      height:36px;
-      border-radius:10px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-shrink:0;
-    }
-
+    .card-header{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+    .card-header-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
     .card-header-icon.blue{background:var(--acts-blue-light)}
     .card-header-icon.blue svg{color:var(--acts-blue)}
+    .card-header-title{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-secondary)}
 
-    .card-header-title{
-      font-size:14px;
-      font-weight:700;
-      text-transform:uppercase;
-      letter-spacing:0.8px;
-      color:var(--text-secondary);
-    }
-
-    /* Fields */
     .field{margin-bottom:20px}
     .field:last-child{margin-bottom:0}
-
-    .field-label{
-      display:block;
-      font-size:16px;
-      font-weight:700;
-      margin-bottom:8px;
-      color:var(--text);
-    }
-
+    .field-label{display:block;font-size:16px;font-weight:700;margin-bottom:8px;color:var(--text)}
     .field-input{
-      width:100%;
-      padding:16px 18px;
-      font-size:20px;
-      font-family:inherit;
-      border-radius:var(--input-radius);
-      border:2px solid var(--border);
-      background:var(--card);
-      color:var(--text);
-      outline:none;
+      width:100%;padding:16px 18px;font-size:20px;font-family:inherit;
+      border-radius:var(--input-radius);border:2px solid var(--border);
+      background:var(--card);color:var(--text);outline:none;
       transition:border-color 0.2s, box-shadow 0.2s;
-      -webkit-appearance:none;
-      appearance:none;
+      -webkit-appearance:none;appearance:none;
     }
-
-    .field-input:focus{
-      border-color:var(--acts-blue);
-      box-shadow:0 0 0 4px rgba(0,114,188,0.12);
-    }
-
+    .field-input:focus{border-color:var(--acts-blue);box-shadow:0 0 0 4px rgba(0,114,188,0.12)}
     .field-input::placeholder{color:var(--text-tertiary)}
+    textarea.field-input{resize:vertical;min-height:100px}
 
-    textarea.field-input{
-      resize:vertical;
-      min-height:100px;
-    }
-
-    /* Area / radio grid */
-    .area-grid{
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:10px;
-    }
-
+    /* Duration radio grid */
+    .area-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
     .area{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      padding:14px 16px;
-      border-radius:14px;
-      border:2px solid var(--border);
-      background:var(--card);
-      cursor:pointer;
-      font-weight:600;
-      font-size:15px;
-      user-select:none;
+      display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;
+      border:2px solid var(--border);background:var(--card);cursor:pointer;
+      font-weight:600;font-size:15px;user-select:none;
       transition:border-color 0.25s, background 0.25s, transform 0.15s;
       -webkit-tap-highlight-color:transparent;
     }
-
     .area:active{transform:scale(0.97)}
-
     .area input{display:none}
-
     .area-check{
-      width:24px;
-      height:24px;
-      border-radius:50%;
-      border:2.5px solid var(--border);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-shrink:0;
+      width:24px;height:24px;border-radius:50%;border:2.5px solid var(--border);
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
       transition:border-color 0.25s, background 0.25s;
     }
-
-    .area-check svg{
-      opacity:0;
-      transform:scale(0.5);
-      transition:opacity 0.2s, transform 0.25s cubic-bezier(0.16,1,0.3,1);
-    }
-
-    .area input:checked ~ .area-check{
-      border-color:var(--acts-blue);
-      background:var(--acts-blue);
-    }
-
-    .area input:checked ~ .area-check svg{
-      opacity:1;
-      transform:scale(1);
-    }
-
+    .area-check svg{opacity:0;transform:scale(0.5);transition:opacity 0.2s, transform 0.25s cubic-bezier(0.16,1,0.3,1)}
+    .area input:checked ~ .area-check{border-color:var(--acts-blue);background:var(--acts-blue)}
+    .area input:checked ~ .area-check svg{opacity:1;transform:scale(1)}
     .area input:checked ~ .area-label{color:var(--acts-blue)}
-
     .area-label{transition:color 0.2s}
 
-    /* Time slot grid */
-    .time-grid{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:10px;
+    /* ── Calendar ─────────────────────────────────────────────── */
+    .cal-nav{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-bottom:16px;
     }
+    .cal-nav-btn{
+      width:40px;height:40px;border-radius:50%;border:none;
+      background:var(--acts-blue-light);color:var(--acts-blue);
+      cursor:pointer;display:flex;align-items:center;justify-content:center;
+      transition:background 0.2s, transform 0.15s;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .cal-nav-btn:active{transform:scale(0.9)}
+    .cal-nav-btn:disabled{opacity:0.3;cursor:not-allowed;transform:none}
+    .cal-month{font-size:18px;font-weight:700;letter-spacing:-0.2px}
+
+    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+
+    .cal-dow{
+      font-size:12px;font-weight:700;color:var(--text-tertiary);
+      text-transform:uppercase;letter-spacing:0.5px;padding:8px 0;
+    }
+
+    .cal-day{
+      aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+      border-radius:50%;font-size:15px;font-weight:600;cursor:pointer;
+      border:2px solid transparent;transition:all 0.2s;
+      -webkit-tap-highlight-color:transparent;color:var(--text);
+      background:none;font-family:inherit;padding:0;
+    }
+    .cal-day:hover{background:var(--acts-blue-light)}
+    .cal-day:active{transform:scale(0.9)}
+    .cal-day.today{border-color:var(--acts-blue);color:var(--acts-blue)}
+    .cal-day.selected{background:var(--acts-blue);color:#fff;border-color:var(--acts-blue)}
+    .cal-day.disabled{color:var(--border);cursor:default;pointer-events:none}
+    .cal-day.disabled:hover{background:none}
+    .cal-day.other-month{color:var(--text-tertiary);opacity:0.4}
+    .cal-day.weekend{color:var(--text-tertiary)}
+    .cal-day.weekend.disabled{opacity:0.3}
+
+    /* ── Time slots ───────────────────────────────────────────── */
+    .time-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 
     .time-slot{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      padding:12px 10px;
-      border-radius:14px;
-      border:2px solid var(--border);
-      background:var(--card);
-      cursor:pointer;
-      font-weight:600;
-      font-size:14px;
-      user-select:none;
-      transition:border-color 0.25s, background 0.25s, transform 0.15s;
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      padding:14px 10px;border-radius:14px;border:2px solid var(--border);
+      background:var(--card);cursor:pointer;font-weight:600;font-size:15px;
+      user-select:none;transition:border-color 0.25s, background 0.25s, transform 0.15s;
       -webkit-tap-highlight-color:transparent;
     }
-
     .time-slot:active{transform:scale(0.97)}
-
     .time-slot input{display:none}
-
     .time-slot .slot-check{
-      width:20px;
-      height:20px;
-      border-radius:50%;
-      border:2.5px solid var(--border);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-shrink:0;
+      width:20px;height:20px;border-radius:50%;border:2.5px solid var(--border);
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
       transition:border-color 0.25s, background 0.25s;
     }
-
-    .time-slot .slot-check svg{
-      opacity:0;
-      transform:scale(0.5);
-      transition:opacity 0.2s, transform 0.25s cubic-bezier(0.16,1,0.3,1);
-    }
-
-    .time-slot input:checked ~ .slot-check{
-      border-color:var(--acts-blue);
-      background:var(--acts-blue);
-    }
-
-    .time-slot input:checked ~ .slot-check svg{
-      opacity:1;
-      transform:scale(1);
-    }
-
+    .time-slot .slot-check svg{opacity:0;transform:scale(0.5);transition:opacity 0.2s, transform 0.25s cubic-bezier(0.16,1,0.3,1)}
+    .time-slot input:checked ~ .slot-check{border-color:var(--acts-blue);background:var(--acts-blue)}
+    .time-slot input:checked ~ .slot-check svg{opacity:1;transform:scale(1)}
     .time-slot input:checked ~ .slot-label{color:var(--acts-blue)}
-
     .slot-label{transition:color 0.2s}
 
-    #timeSlotsWrap{
-      display:none;
-      animation:slideDown 0.3s cubic-bezier(0.16,1,0.3,1);
-    }
-
+    #timeSlotsWrap{display:none;animation:slideDown 0.3s cubic-bezier(0.16,1,0.3,1)}
     #timeSlotsWrap.visible{display:block}
 
-    .weekend-msg{
-      text-align:center;
-      color:var(--acts-red);
-      font-weight:600;
-      font-size:14px;
-      margin-top:8px;
-    }
-
-    .loading-slots{
-      text-align:center;
-      padding:20px;
-      color:var(--text-secondary);
-      font-weight:600;
-      font-size:15px;
-    }
-
+    .loading-slots{text-align:center;padding:20px;color:var(--text-secondary);font-weight:600;font-size:15px}
     .loading-slots .mini-spinner{
-      width:24px;
-      height:24px;
-      border:3px solid var(--border);
-      border-top:3px solid var(--acts-blue);
-      border-radius:50%;
-      animation:spin 0.8s linear infinite;
-      margin:0 auto 10px;
+      width:24px;height:24px;border:3px solid var(--border);border-top:3px solid var(--acts-blue);
+      border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 10px;
     }
+    .no-slots-msg{text-align:center;padding:20px;color:var(--text-secondary);font-weight:600;font-size:15px}
 
-    .no-slots-msg{
-      text-align:center;
-      padding:20px;
-      color:var(--text-secondary);
-      font-weight:600;
-      font-size:15px;
-    }
-
-    /* Submit button */
+    /* ── Submit ────────────────────────────────────────────────── */
     .submit-btn{
-      display:block;
-      width:100%;
-      padding:18px;
-      font-size:20px;
-      font-family:inherit;
-      border:none;
-      border-radius:16px;
-      font-weight:700;
-      color:#fff;
+      display:block;width:100%;padding:18px;font-size:20px;font-family:inherit;
+      border:none;border-radius:16px;font-weight:700;color:#fff;
       background:linear-gradient(135deg, var(--acts-blue), var(--acts-blue-dark));
-      cursor:pointer;
-      transition:transform 0.15s, opacity 0.2s;
-      -webkit-tap-highlight-color:transparent;
-      -webkit-appearance:none;
-      appearance:none;
-      box-shadow:0 4px 14px rgba(0,114,188,0.3);
-      margin-top:16px;
-      opacity:0;
-      animation:cardIn 0.5s cubic-bezier(0.16,1,0.3,1) 0.55s forwards;
+      cursor:pointer;transition:transform 0.15s, opacity 0.2s;
+      -webkit-tap-highlight-color:transparent;-webkit-appearance:none;appearance:none;
+      box-shadow:0 4px 14px rgba(0,114,188,0.3);margin-top:16px;
+      opacity:0;animation:cardIn 0.5s cubic-bezier(0.16,1,0.3,1) 0.55s forwards;
     }
-
     .submit-btn:active{transform:scale(0.97)}
     .submit-btn:disabled{opacity:0.5;transform:none;cursor:not-allowed}
 
-    /* Processing overlay */
     #processingOverlay{
-      position:fixed;
-      inset:0;
-      background:rgba(244,246,248,0.92);
-      backdrop-filter:blur(12px);
-      -webkit-backdrop-filter:blur(12px);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      flex-direction:column;
-      z-index:9999;
+      position:fixed;inset:0;background:rgba(244,246,248,0.92);
+      backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+      display:none;align-items:center;justify-content:center;flex-direction:column;z-index:9999;
     }
+    .spinner{width:48px;height:48px;border:4px solid var(--border);border-top:4px solid var(--acts-blue);border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:16px}
+    #processingOverlay h3{font-size:20px;font-weight:600;color:var(--text-secondary)}
 
-    .spinner{
-      width:48px;
-      height:48px;
-      border:4px solid var(--border);
-      border-top:4px solid var(--acts-blue);
-      border-radius:50%;
-      animation:spin 0.8s linear infinite;
-      margin-bottom:16px;
-    }
-
-    #processingOverlay h3{
-      font-size:20px;
-      font-weight:600;
-      color:var(--text-secondary);
-    }
-
-    /* Success screen */
     .success-screen{
-      position:fixed;
-      inset:0;
-      background:var(--bg);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-direction:column;
-      z-index:10000;
-      animation:fadeIn 0.3s ease;
+      position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;
+      justify-content:center;flex-direction:column;z-index:10000;animation:fadeIn 0.3s ease;
     }
-
     .success-check{
-      width:80px;
-      height:80px;
-      border-radius:50%;
-      background:linear-gradient(135deg,#34C759,#30D158);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      margin-bottom:20px;
+      width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#34C759,#30D158);
+      display:flex;align-items:center;justify-content:center;margin-bottom:20px;
       animation:popIn 0.5s cubic-bezier(0.16,1,0.3,1);
     }
+    .success-check svg{width:40px;height:40px;stroke:#fff;stroke-width:3;fill:none;stroke-dasharray:50;stroke-dashoffset:50;animation:drawCheck 0.4s 0.3s ease forwards}
+    .success-text{font-size:24px;font-weight:700;color:var(--text)}
+    .success-sub{font-size:16px;font-weight:500;color:var(--text-secondary);margin-top:8px}
 
-    .success-check svg{
-      width:40px;
-      height:40px;
-      stroke:#fff;
-      stroke-width:3;
-      fill:none;
-      stroke-dasharray:50;
-      stroke-dashoffset:50;
-      animation:drawCheck 0.4s 0.3s ease forwards;
-    }
-
-    .success-text{
-      font-size:24px;
-      font-weight:700;
-      color:var(--text);
-    }
-
-    .success-sub{
-      font-size:16px;
-      font-weight:500;
-      color:var(--text-secondary);
-      margin-top:8px;
-    }
-
-    /* Footer */
-    .footer{
-      text-align:center;
-      padding:16px 24px 24px;
-      padding-bottom:calc(24px + var(--safe-bottom));
-      opacity:0;
-      animation:fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) 0.6s forwards;
-    }
-
-    .footer-line{
-      width:40px;
-      height:3px;
-      border-radius:3px;
-      background:linear-gradient(90deg, var(--acts-blue), var(--acts-burgundy));
-      margin:0 auto 8px;
-    }
-
+    .footer{text-align:center;padding:16px 24px 24px;padding-bottom:calc(24px + var(--safe-bottom));opacity:0;animation:fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) 0.6s forwards}
+    .footer-line{width:40px;height:3px;border-radius:3px;background:linear-gradient(90deg, var(--acts-blue), var(--acts-burgundy));margin:0 auto 8px}
     .footer p{font-size:12px;color:#bbb;font-weight:500}
 
-    /* Tablet+ */
     @media(min-width:768px){
-      .hero{padding:72px 24px 56px; padding-top:calc(72px + var(--safe-top))}
+      .hero{padding:72px 24px 56px;padding-top:calc(72px + var(--safe-top))}
       .hero h1{font-size:46px}
       .hero .tagline{font-size:21px}
       .hero-icon{width:96px;height:96px;border-radius:28px}
@@ -549,6 +276,8 @@
       .area{padding:16px 18px;font-size:17px}
       .time-slot{padding:14px 12px;font-size:16px}
       .submit-btn{font-size:22px;padding:20px}
+      .cal-day{font-size:16px}
+      .cal-month{font-size:20px}
     }
   </style>
 </head>
@@ -579,7 +308,6 @@
           </div>
           <span class="card-header-title">Session Duration</span>
         </div>
-
         <div class="area-grid">
           <label class="area">
             <input type="radio" name="duration" value="30" checked>
@@ -594,23 +322,40 @@
         </div>
       </div>
 
-      <!-- Card 2: Date & Time -->
+      <!-- Card 2: Calendar & Time -->
       <div class="card">
         <div class="card-header">
           <div class="card-header-icon blue">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
           </div>
-          <span class="card-header-title">Date &amp; Time</span>
+          <span class="card-header-title">Select a Date</span>
         </div>
 
-        <div class="field">
-          <label class="field-label" for="dateInput">Select a Date</label>
-          <input class="field-input" type="date" id="dateInput" required>
-          <div id="weekendMsg" class="weekend-msg" style="display:none">Weekends are unavailable. Please select a weekday.</div>
+        <!-- Calendar navigation -->
+        <div class="cal-nav">
+          <button type="button" class="cal-nav-btn" id="calPrev">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <span class="cal-month" id="calMonth"></span>
+          <button type="button" class="cal-nav-btn" id="calNext">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
         </div>
 
+        <!-- Calendar grid -->
+        <div class="cal-grid" id="calGrid">
+          <div class="cal-dow">Sun</div>
+          <div class="cal-dow">Mon</div>
+          <div class="cal-dow">Tue</div>
+          <div class="cal-dow">Wed</div>
+          <div class="cal-dow">Thu</div>
+          <div class="cal-dow">Fri</div>
+          <div class="cal-dow">Sat</div>
+        </div>
+
+        <!-- Time slots (shown after date selection) -->
         <div id="timeSlotsWrap">
-          <label class="field-label" style="margin-top:16px;margin-bottom:10px;display:block">Select a Time</label>
+          <label class="field-label" style="margin-top:20px;margin-bottom:10px;display:block">Select a Time</label>
           <div class="time-grid" id="timeGrid"></div>
         </div>
       </div>
@@ -623,17 +368,14 @@
           </div>
           <span class="card-header-title">Your Information</span>
         </div>
-
         <div class="field">
           <label class="field-label" for="nameInput">Name</label>
           <input class="field-input" id="nameInput" placeholder="Enter your name" required autocomplete="name">
         </div>
-
         <div class="field">
           <label class="field-label" for="emailInput">Email</label>
           <input class="field-input" id="emailInput" type="email" placeholder="you@example.com" required autocomplete="email">
         </div>
-
         <div class="field">
           <label class="field-label" for="notesInput">Notes <span style="font-weight:400;color:var(--text-tertiary)">(optional)</span></label>
           <textarea class="field-input" id="notesInput" placeholder="What do you need help with?"></textarea>
@@ -641,7 +383,6 @@
       </div>
 
       <button type="submit" class="submit-btn">Book Session</button>
-
     </form>
   </div>
 
@@ -657,160 +398,230 @@
 
   <script>
     // ── Configuration ──────────────────────────────────────────────
-    // Replace this URL after deploying your Google Apps Script (see setup-guide.md)
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxVJ27tMnZR5fe3rNW7CrUZsXbh8i9Svvtuq02zZEJG_6Ch1MdwpBfC7b2wId33iWQ/exec";
+    var GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxVJ27tMnZR5fe3rNW7CrUZsXbh8i9Svvtuq02zZEJG_6Ch1MdwpBfC7b2wId33iWQ/exec";
 
-    const DAY_START_HOUR = 13;  // 1 PM
-    const DAY_END_HOUR = 16;    // 4 PM (last slot ends at 4 PM)
-    const SLOT_INCREMENT = 30;  // minutes
-    const MAX_DAYS_OUT = 60;
+    var DAY_START_HOUR = 13;  // 1 PM
+    var DAY_END_HOUR   = 16;  // 4 PM
+    var SLOT_INCREMENT = 30;
+    var MAX_DAYS_OUT   = 60;
 
     // ── State ──────────────────────────────────────────────────────
-    let selectedDuration = 30;
-    let selectedTime = null;
-    let availableSlots = [];
+    var selectedDuration = 30;
+    var selectedTime = null;
+    var selectedDate = null;   // "YYYY-MM-DD"
+    var calYear, calMonth;     // currently displayed month
 
     // ── DOM refs ───────────────────────────────────────────────────
-    const form = document.getElementById("bookingForm");
-    const dateInput = document.getElementById("dateInput");
-    const timeGrid = document.getElementById("timeGrid");
-    const timeSlotsWrap = document.getElementById("timeSlotsWrap");
-    const weekendMsg = document.getElementById("weekendMsg");
-    const durationRadios = document.querySelectorAll('input[name="duration"]');
+    var form          = document.getElementById("bookingForm");
+    var calGrid       = document.getElementById("calGrid");
+    var calMonthLabel = document.getElementById("calMonth");
+    var calPrev       = document.getElementById("calPrev");
+    var calNext       = document.getElementById("calNext");
+    var timeGrid      = document.getElementById("timeGrid");
+    var timeSlotsWrap = document.getElementById("timeSlotsWrap");
+    var durationRadios = document.querySelectorAll('input[name="duration"]');
+
+    var MONTH_NAMES = ["January","February","March","April","May","June",
+                       "July","August","September","October","November","December"];
 
     // ── Helpers ────────────────────────────────────────────────────
-    function pad(n) { return String(n).padStart(2, "0"); }
+    function pad(n) { return (n < 10 ? "0" : "") + n; }
 
-    function formatDate(d) {
-      return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+    function fmtDate(y, m, d) {
+      return y + "-" + pad(m + 1) + "-" + pad(d);
     }
 
     function formatTime12(hour, min) {
-      const period = hour >= 12 ? "PM" : "AM";
-      const h = hour % 12 || 12;
+      var period = hour >= 12 ? "PM" : "AM";
+      var h = hour % 12 || 12;
       return h + ":" + pad(min) + " " + period;
     }
 
-    function formatTime24(hour, min) {
-      return pad(hour) + ":" + pad(min);
-    }
+    function isWeekend(dayOfWeek) { return dayOfWeek === 0 || dayOfWeek === 6; }
 
-    // ── Initialize date input ──────────────────────────────────────
-    function initDateInput() {
-      const today = new Date();
-      dateInput.min = formatDate(today);
-      const maxDate = new Date();
+    // ── Calendar rendering ─────────────────────────────────────────
+    function renderCalendar() {
+      // Remove old day buttons
+      var oldDays = calGrid.querySelectorAll(".cal-day");
+      for (var i = 0; i < oldDays.length; i++) oldDays[i].remove();
+
+      calMonthLabel.textContent = MONTH_NAMES[calMonth] + " " + calYear;
+
+      var today = new Date();
+      today.setHours(0, 0, 0, 0);
+      var todayStr = fmtDate(today.getFullYear(), today.getMonth(), today.getDate());
+
+      var maxDate = new Date();
       maxDate.setDate(maxDate.getDate() + MAX_DAYS_OUT);
-      dateInput.max = formatDate(maxDate);
+
+      var minMonth = today.getFullYear() * 12 + today.getMonth();
+      var maxMonth = maxDate.getFullYear() * 12 + maxDate.getMonth();
+      var curMonth = calYear * 12 + calMonth;
+
+      calPrev.disabled = (curMonth <= minMonth);
+      calNext.disabled = (curMonth >= maxMonth);
+
+      // First day of month and total days
+      var firstDay = new Date(calYear, calMonth, 1).getDay();
+      var daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+      var daysInPrevMonth = new Date(calYear, calMonth, 0).getDate();
+
+      // Leading days from previous month
+      for (var p = firstDay - 1; p >= 0; p--) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "cal-day disabled other-month";
+        btn.textContent = daysInPrevMonth - p;
+        calGrid.appendChild(btn);
+      }
+
+      // Days of current month
+      for (var d = 1; d <= daysInMonth; d++) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "cal-day";
+        btn.textContent = d;
+
+        var dateObj = new Date(calYear, calMonth, d);
+        var dateStr = fmtDate(calYear, calMonth, d);
+        var dow = dateObj.getDay();
+
+        if (isWeekend(dow)) {
+          btn.classList.add("weekend", "disabled");
+        } else if (dateObj < today || dateObj > maxDate) {
+          btn.classList.add("disabled");
+        }
+
+        if (dateStr === todayStr) btn.classList.add("today");
+        if (dateStr === selectedDate) btn.classList.add("selected");
+
+        // Click handler (closure)
+        (function(ds, el) {
+          if (!el.classList.contains("disabled")) {
+            el.addEventListener("click", function() {
+              selectDate(ds);
+            });
+          }
+        })(dateStr, btn);
+
+        calGrid.appendChild(btn);
+      }
+
+      // Trailing days to fill the last row
+      var totalCells = firstDay + daysInMonth;
+      var trailing = (7 - (totalCells % 7)) % 7;
+      for (var t = 1; t <= trailing; t++) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "cal-day disabled other-month";
+        btn.textContent = t;
+        calGrid.appendChild(btn);
+      }
     }
 
-    // ── Fetch available slots from Apps Script ─────────────────────
+    function selectDate(dateStr) {
+      selectedDate = dateStr;
+      selectedTime = null;
+
+      // Re-render calendar to update selection highlight
+      renderCalendar();
+
+      // Fetch available times
+      fetchAvailableSlots(dateStr);
+    }
+
+    // ── Calendar navigation ────────────────────────────────────────
+    calPrev.addEventListener("click", function() {
+      calMonth--;
+      if (calMonth < 0) { calMonth = 11; calYear--; }
+      renderCalendar();
+    });
+
+    calNext.addEventListener("click", function() {
+      calMonth++;
+      if (calMonth > 11) { calMonth = 0; calYear++; }
+      renderCalendar();
+    });
+
+    // ── Fetch available slots ──────────────────────────────────────
     async function fetchAvailableSlots(dateStr) {
       timeGrid.innerHTML =
         '<div class="loading-slots"><div class="mini-spinner"></div>Checking availability...</div>';
       timeSlotsWrap.classList.add("visible");
 
       try {
-        const url = GOOGLE_SCRIPT_URL + "?action=availability&date=" +
+        var url = GOOGLE_SCRIPT_URL + "?action=availability&date=" +
           encodeURIComponent(dateStr) + "&duration=" + selectedDuration;
-        const resp = await fetch(url);
-        const data = await resp.json();
+        var resp = await fetch(url);
+        var data = await resp.json();
 
         if (data.available && data.available.length > 0) {
-          availableSlots = data.available;
           renderTimeSlots(data.available);
         } else {
           timeGrid.innerHTML =
             '<div class="no-slots-msg">No available times on this date. Please try another day.</div>';
         }
       } catch (err) {
-        // Apps Script not deployed yet — show setup message
         timeGrid.innerHTML =
-          '<div class="no-slots-msg">Availability checking is not configured yet.<br>Please deploy the Google Apps Script first (see setup-guide.md).</div>';
+          '<div class="no-slots-msg">Could not check availability. Please try again.</div>';
       }
     }
 
-    // ── Render only available time slots ───────────────────────────
+    // ── Render time slots ──────────────────────────────────────────
     function renderTimeSlots(slots) {
       timeGrid.innerHTML = "";
       selectedTime = null;
 
-      slots.forEach(function (time24) {
-        var parts = time24.split(":");
-        var hour = parseInt(parts[0], 10);
-        var min = parseInt(parts[1], 10);
-        var time12 = formatTime12(hour, min);
+      for (var i = 0; i < slots.length; i++) {
+        (function(time24) {
+          var parts = time24.split(":");
+          var hour = parseInt(parts[0], 10);
+          var min = parseInt(parts[1], 10);
+          var time12 = formatTime12(hour, min);
 
-        var label = document.createElement("label");
-        label.className = "time-slot";
+          var label = document.createElement("label");
+          label.className = "time-slot";
+          label.innerHTML =
+            '<input type="radio" name="timeSlot" value="' + time24 + '">' +
+            '<span class="slot-check"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 7.5L5.5 11L12 3" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+            '<span class="slot-label">' + time12 + '</span>';
 
-        label.innerHTML =
-          '<input type="radio" name="timeSlot" value="' + time24 + '">' +
-          '<span class="slot-check"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 7.5L5.5 11L12 3" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
-          '<span class="slot-label">' + time12 + '</span>';
+          label.querySelector("input").addEventListener("change", function() {
+            selectedTime = this.value;
+          });
 
-        label.querySelector("input").addEventListener("change", function () {
-          selectedTime = this.value;
-        });
-
-        timeGrid.appendChild(label);
-      });
+          timeGrid.appendChild(label);
+        })(slots[i]);
+      }
 
       timeSlotsWrap.classList.add("visible");
     }
 
     // ── Duration change ────────────────────────────────────────────
-    durationRadios.forEach(function (radio) {
-      radio.addEventListener("change", function () {
+    durationRadios.forEach(function(radio) {
+      radio.addEventListener("change", function() {
         selectedDuration = parseInt(this.value, 10);
-        if (dateInput.value && !isWeekend(dateInput.value)) {
-          fetchAvailableSlots(dateInput.value);
+        if (selectedDate) {
+          fetchAvailableSlots(selectedDate);
         }
       });
     });
 
-    // ── Date change ────────────────────────────────────────────────
-    function isWeekend(dateStr) {
-      var parts = dateStr.split("-");
-      var d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-      var day = d.getDay();
-      return day === 0 || day === 6;
-    }
-
-    dateInput.addEventListener("change", function () {
-      if (!this.value) {
-        timeSlotsWrap.classList.remove("visible");
-        weekendMsg.style.display = "none";
-        return;
-      }
-
-      if (isWeekend(this.value)) {
-        weekendMsg.style.display = "block";
-        timeSlotsWrap.classList.remove("visible");
-        this.value = "";
-        return;
-      }
-
-      weekendMsg.style.display = "none";
-      fetchAvailableSlots(this.value);
-    });
-
     // ── Form submit ────────────────────────────────────────────────
-    form.addEventListener("submit", async function (e) {
+    form.addEventListener("submit", async function(e) {
       e.preventDefault();
 
-      var name = document.getElementById("nameInput").value.trim();
+      var name  = document.getElementById("nameInput").value.trim();
       var email = document.getElementById("emailInput").value.trim();
-      var date = dateInput.value;
       var notes = document.getElementById("notesInput").value.trim();
 
-      if (!name || !email || !date || !selectedTime) {
-        alert("Please fill in all required fields and select a time slot.");
+      if (!name || !email || !selectedDate || !selectedTime) {
+        alert("Please fill in all required fields, select a date, and choose a time slot.");
         return;
       }
 
       var overlay = document.getElementById("processingOverlay");
-      var btn = form.querySelector("button");
+      var btn = form.querySelector("button[type=submit]");
       btn.disabled = true;
       overlay.style.display = "flex";
 
@@ -821,15 +632,13 @@
           body: JSON.stringify({
             name: name,
             email: email,
-            date: date,
+            date: selectedDate,
             time: selectedTime,
             duration: selectedDuration,
             notes: notes
           })
         });
-      } catch (err) {
-        // no-cors mode — response is opaque, ignore errors
-      }
+      } catch (err) {}
 
       overlay.style.display = "none";
 
@@ -843,11 +652,14 @@
         '<div class="success-sub">You\'ll receive a calendar invite shortly</div>';
       document.body.appendChild(success);
 
-      setTimeout(function () { location.reload(); }, 2000);
+      setTimeout(function() { location.reload(); }, 2000);
     });
 
     // ── Init ───────────────────────────────────────────────────────
-    initDateInput();
+    var now = new Date();
+    calYear = now.getFullYear();
+    calMonth = now.getMonth();
+    renderCalendar();
   </script>
 </body>
 </html>
