@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Book Tech Help with Joey</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+    :root{
+      --acts-blue:#0072bc;
+      --acts-blue-dark:#005a96;
+      --acts-blue-light:#e8f2fa;
+      --acts-red:#ee2842;
+      --acts-burgundy:#980539;
+      --bg:#f4f6f8;
+      --card:#FFFFFF;
+      --text:#1C1C1E;
+      --text-secondary:#6B7280;
+      --text-tertiary:#AEAEB2;
+      --border:#E5E5EA;
+      --shadow:0 2px 20px rgba(0,0,0,0.07), 0 0 1px rgba(0,0,0,0.1);
+      --radius:20px;
+      --input-radius:14px;
+      --safe-top:env(safe-area-inset-top, 0px);
+      --safe-bottom:env(safe-area-inset-bottom, 0px);
+    }
+
+    body{
+      font-family:"Work Sans",-apple-system,system-ui,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100dvh;
+      display:flex;
+      flex-direction:column;
+      -webkit-font-smoothing:antialiased;
+      -webkit-tap-highlight-color:transparent;
+      overflow-x:hidden;
+    }
+
+    /* Brand bar */
+    .brand-bar{
+      width:100%;
+      height:5px;
+      background:linear-gradient(90deg, var(--acts-blue) 0%, var(--acts-blue) 40%, var(--acts-red) 40%, var(--acts-red) 70%, var(--acts-burgundy) 70%, var(--acts-burgundy) 100%);
+      flex-shrink:0;
+    }
+
+    /* Hero */
+    .hero{
+      width:100%;
+      padding:60px 24px 48px;
+      padding-top:calc(60px + var(--safe-top));
+      background:linear-gradient(170deg, var(--acts-blue-dark) 0%, var(--acts-blue) 50%, #1a8fd1 100%);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      width:300px;
+      height:300px;
+      border-radius:50%;
+      background:rgba(255,255,255,0.04);
+      top:-80px;
+      right:-60px;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      width:200px;
+      height:200px;
+      border-radius:50%;
+      background:rgba(255,255,255,0.03);
+      bottom:-40px;
+      left:-40px;
+    }
+
+    .hero-content{
+      max-width:560px;
+      margin:0 auto;
+      position:relative;
+      z-index:1;
+      text-align:center;
+      opacity:0;
+      transform:translateY(16px);
+      animation:fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 0.1s forwards;
+    }
+
+    .hero-icon{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:80px;
+      height:80px;
+      border-radius:24px;
+      background:rgba(255,255,255,0.15);
+      margin-bottom:20px;
+      opacity:0;
+      animation:fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
+    }
+
+    .hero h1{
+      font-size:38px;
+      font-weight:800;
+      color:#fff;
+      letter-spacing:-0.5px;
+      margin-bottom:8px;
+      text-shadow:0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    .hero .tagline{
+      font-size:18px;
+      font-weight:400;
+      color:rgba(255,255,255,0.85);
+      font-style:italic;
+      letter-spacing:0.3px;
+    }
+
+    /* Animations */
+    @keyframes fadeUp{
+      from{opacity:0;transform:translateY(16px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    @keyframes cardIn{
+      from{opacity:0;transform:translateY(16px) scale(0.96)}
+      to{opacity:1;transform:translateY(0) scale(1)}
+    }
+
+    @keyframes slideDown{
+      from{opacity:0;transform:translateY(-8px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+    @keyframes popIn{
+      0%{transform:scale(0);opacity:0}
+      50%{transform:scale(1.15)}
+      100%{transform:scale(1);opacity:1}
+    }
+
+    @keyframes drawCheck{to{stroke-dashoffset:0}}
+
+    @keyframes pageIn{
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    /* Page container */
+    .page{
+      flex:1;
+      max-width:560px;
+      width:100%;
+      margin:0 auto;
+      padding:20px 24px 40px;
+      padding-bottom:calc(40px + var(--safe-bottom));
+      opacity:0;
+      transform:translateY(12px);
+      animation:pageIn 0.5s cubic-bezier(0.16,1,0.3,1) 0.2s forwards;
+    }
+
+    /* Cards */
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:28px 24px;
+      margin-bottom:16px;
+      opacity:0;
+      animation:cardIn 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    .card:nth-child(1){animation-delay:0.25s}
+    .card:nth-child(2){animation-delay:0.35s}
+    .card:nth-child(3){animation-delay:0.45s}
+
+    .card-header{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:22px;
+    }
+
+    .card-header-icon{
+      width:36px;
+      height:36px;
+      border-radius:10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+    }
+
+    .card-header-icon.blue{background:var(--acts-blue-light)}
+    .card-header-icon.blue svg{color:var(--acts-blue)}
+
+    .card-header-title{
+      font-size:14px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:0.8px;
+      color:var(--text-secondary);
+    }
+
+    /* Fields */
+    .field{margin-bottom:20px}
+    .field:last-child{margin-bottom:0}
+
+    .field-label{
+      display:block;
+      font-size:16px;
+      font-weight:700;
+      margin-bottom:8px;
+      color:var(--text);
+    }
+
+    .field-input{
+      width:100%;
+      padding:16px 18px;
+      font-size:20px;
+      font-family:inherit;
+      border-radius:var(--input-radius);
+      border:2px solid var(--border);
+      background:var(--card);
+      color:var(--text);
+      outline:none;
+      transition:border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance:none;
+      appearance:none;
+    }
+
+    .field-input:focus{
+      border-color:var(--acts-blue);
+      box-shadow:0 0 0 4px rgba(0,114,188,0.12);
+    }
+
+    .field-input::placeholder{color:var(--text-tertiary)}
+
+    textarea.field-input{
+      resize:vertical;
+      min-height:100px;
+    }
+
+    /* Area / radio grid */
+    .area-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+    }
+
+    .area{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:14px 16px;
+      border-radius:14px;
+      border:2px solid var(--border);
+      background:var(--card);
+      cursor:pointer;
+      font-weight:600;
+      font-size:15px;
+      user-select:none;
+      transition:border-color 0.25s, background 0.25s, transform 0.15s;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .area:active{transform:scale(0.97)}
+
+    .area input{display:none}
+
+    .area-check{
+      width:24px;
+      height:24px;
+      border-radius:50%;
+      border:2.5px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      transition:border-color 0.25s, background 0.25s;
+    }
+
+    .area-check svg{
+      opacity:0;
+      transform:scale(0.5);
+      transition:opacity 0.2s, transform 0.25s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .area input:checked ~ .area-check{
+      border-color:var(--acts-blue);
+      background:var(--acts-blue);
+    }
+
+    .area input:checked ~ .area-check svg{
+      opacity:1;
+      transform:scale(1);
+    }
+
+    .area input:checked ~ .area-label{color:var(--acts-blue)}
+
+    .area-label{transition:color 0.2s}
+
+    /* Time slot grid */
+    .time-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+    }
+
+    .time-slot{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:12px 10px;
+      border-radius:14px;
+      border:2px solid var(--border);
+      background:var(--card);
+      cursor:pointer;
+      font-weight:600;
+      font-size:14px;
+      user-select:none;
+      transition:border-color 0.25s, background 0.25s, transform 0.15s;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .time-slot:active{transform:scale(0.97)}
+
+    .time-slot input{display:none}
+
+    .time-slot .slot-check{
+      width:20px;
+      height:20px;
+      border-radius:50%;
+      border:2.5px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      transition:border-color 0.25s, background 0.25s;
+    }
+
+    .time-slot .slot-check svg{
+      opacity:0;
+      transform:scale(0.5);
+      transition:opacity 0.2s, transform 0.25s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .time-slot input:checked ~ .slot-check{
+      border-color:var(--acts-blue);
+      background:var(--acts-blue);
+    }
+
+    .time-slot input:checked ~ .slot-check svg{
+      opacity:1;
+      transform:scale(1);
+    }
+
+    .time-slot input:checked ~ .slot-label{color:var(--acts-blue)}
+
+    .slot-label{transition:color 0.2s}
+
+    #timeSlotsWrap{
+      display:none;
+      animation:slideDown 0.3s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    #timeSlotsWrap.visible{display:block}
+
+    .weekend-msg{
+      text-align:center;
+      color:var(--acts-red);
+      font-weight:600;
+      font-size:14px;
+      margin-top:8px;
+    }
+
+    /* Submit button */
+    .submit-btn{
+      display:block;
+      width:100%;
+      padding:18px;
+      font-size:20px;
+      font-family:inherit;
+      border:none;
+      border-radius:16px;
+      font-weight:700;
+      color:#fff;
+      background:linear-gradient(135deg, var(--acts-blue), var(--acts-blue-dark));
+      cursor:pointer;
+      transition:transform 0.15s, opacity 0.2s;
+      -webkit-tap-highlight-color:transparent;
+      -webkit-appearance:none;
+      appearance:none;
+      box-shadow:0 4px 14px rgba(0,114,188,0.3);
+      margin-top:16px;
+      opacity:0;
+      animation:cardIn 0.5s cubic-bezier(0.16,1,0.3,1) 0.55s forwards;
+    }
+
+    .submit-btn:active{transform:scale(0.97)}
+    .submit-btn:disabled{opacity:0.5;transform:none;cursor:not-allowed}
+
+    /* Processing overlay */
+    #processingOverlay{
+      position:fixed;
+      inset:0;
+      background:rgba(244,246,248,0.92);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      z-index:9999;
+    }
+
+    .spinner{
+      width:48px;
+      height:48px;
+      border:4px solid var(--border);
+      border-top:4px solid var(--acts-blue);
+      border-radius:50%;
+      animation:spin 0.8s linear infinite;
+      margin-bottom:16px;
+    }
+
+    #processingOverlay h3{
+      font-size:20px;
+      font-weight:600;
+      color:var(--text-secondary);
+    }
+
+    /* Success screen */
+    .success-screen{
+      position:fixed;
+      inset:0;
+      background:var(--bg);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      z-index:10000;
+      animation:fadeIn 0.3s ease;
+    }
+
+    .success-check{
+      width:80px;
+      height:80px;
+      border-radius:50%;
+      background:linear-gradient(135deg,#34C759,#30D158);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-bottom:20px;
+      animation:popIn 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .success-check svg{
+      width:40px;
+      height:40px;
+      stroke:#fff;
+      stroke-width:3;
+      fill:none;
+      stroke-dasharray:50;
+      stroke-dashoffset:50;
+      animation:drawCheck 0.4s 0.3s ease forwards;
+    }
+
+    .success-text{
+      font-size:24px;
+      font-weight:700;
+      color:var(--text);
+    }
+
+    .success-sub{
+      font-size:16px;
+      font-weight:500;
+      color:var(--text-secondary);
+      margin-top:8px;
+    }
+
+    /* Footer */
+    .footer{
+      text-align:center;
+      padding:16px 24px 24px;
+      padding-bottom:calc(24px + var(--safe-bottom));
+      opacity:0;
+      animation:fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) 0.6s forwards;
+    }
+
+    .footer-line{
+      width:40px;
+      height:3px;
+      border-radius:3px;
+      background:linear-gradient(90deg, var(--acts-blue), var(--acts-burgundy));
+      margin:0 auto 8px;
+    }
+
+    .footer p{font-size:12px;color:#bbb;font-weight:500}
+
+    /* Tablet+ */
+    @media(min-width:768px){
+      .hero{padding:72px 24px 56px; padding-top:calc(72px + var(--safe-top))}
+      .hero h1{font-size:46px}
+      .hero .tagline{font-size:21px}
+      .hero-icon{width:96px;height:96px;border-radius:28px}
+      .page{padding-top:24px}
+      .card{padding:32px 28px}
+      .field-input{font-size:22px;padding:18px 20px}
+      .area{padding:16px 18px;font-size:17px}
+      .time-slot{padding:14px 12px;font-size:16px}
+      .submit-btn{font-size:22px;padding:20px}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="brand-bar"></div>
+
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-icon">
+        <svg width="40" height="40" fill="none" viewBox="0 0 24 24">
+          <path d="M21 10H3M16 2v4M8 2v4M7.8 22h8.4c1.68 0 2.52 0 3.162-.327a3 3 0 0 0 1.311-1.311C21 19.72 21 18.88 21 17.2V8.8c0-1.68 0-2.52-.327-3.162a3 3 0 0 0-1.311-1.311C18.72 4 17.88 4 16.2 4H7.8c-1.68 0-2.52 0-3.162.327a3 3 0 0 0-1.311 1.311C3 6.28 3 7.12 3 8.8v8.4c0 1.68 0 2.52.327 3.162a3 3 0 0 0 1.311 1.311C5.28 22 6.12 22 7.8 22z" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1>Book Tech Help</h1>
+      <div class="tagline">Schedule a session with Joey</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <form id="bookingForm">
+
+      <!-- Card 1: Session Duration -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon blue">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <span class="card-header-title">Session Duration</span>
+        </div>
+
+        <div class="area-grid">
+          <label class="area">
+            <input type="radio" name="duration" value="30" checked>
+            <span class="area-check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7.5L5.5 11L12 3" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="area-label">30 Minutes</span>
+          </label>
+          <label class="area">
+            <input type="radio" name="duration" value="60">
+            <span class="area-check"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7.5L5.5 11L12 3" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="area-label">60 Minutes</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Card 2: Date & Time -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon blue">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          </div>
+          <span class="card-header-title">Date &amp; Time</span>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="dateInput">Select a Date</label>
+          <input class="field-input" type="date" id="dateInput" required>
+          <div id="weekendMsg" class="weekend-msg" style="display:none">Weekends are unavailable. Please select a weekday.</div>
+        </div>
+
+        <div id="timeSlotsWrap">
+          <label class="field-label" style="margin-top:16px;margin-bottom:10px;display:block">Select a Time</label>
+          <div class="time-grid" id="timeGrid"></div>
+        </div>
+      </div>
+
+      <!-- Card 3: Your Information -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-header-icon blue">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          </div>
+          <span class="card-header-title">Your Information</span>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="nameInput">Name</label>
+          <input class="field-input" id="nameInput" placeholder="Enter your name" required autocomplete="name">
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="emailInput">Email</label>
+          <input class="field-input" id="emailInput" type="email" placeholder="you@example.com" required autocomplete="email">
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="notesInput">Notes <span style="font-weight:400;color:var(--text-tertiary)">(optional)</span></label>
+          <textarea class="field-input" id="notesInput" placeholder="What do you need help with?"></textarea>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn">Book Session</button>
+
+    </form>
+  </div>
+
+  <div class="footer">
+    <div class="footer-line"></div>
+    <p>Tech Help with Joey</p>
+  </div>
+
+  <div id="processingOverlay">
+    <div class="spinner"></div>
+    <h3>Booking...</h3>
+  </div>
+
+  <script>
+    // ── Configuration ──────────────────────────────────────────────
+    // Replace this URL after deploying your Google Apps Script (see setup-guide.md)
+    const GOOGLE_SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+
+    const DAY_START_HOUR = 9;   // 9 AM
+    const DAY_END_HOUR = 17;    // 5 PM
+    const SLOT_INCREMENT = 30;  // minutes
+    const MAX_DAYS_OUT = 60;
+
+    // ── State ──────────────────────────────────────────────────────
+    let selectedDuration = 30;
+    let selectedTime = null;
+
+    // ── DOM refs ───────────────────────────────────────────────────
+    const form = document.getElementById("bookingForm");
+    const dateInput = document.getElementById("dateInput");
+    const timeGrid = document.getElementById("timeGrid");
+    const timeSlotsWrap = document.getElementById("timeSlotsWrap");
+    const weekendMsg = document.getElementById("weekendMsg");
+    const durationRadios = document.querySelectorAll('input[name="duration"]');
+
+    // ── Helpers ────────────────────────────────────────────────────
+    function pad(n) { return String(n).padStart(2, "0"); }
+
+    function formatDate(d) {
+      return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+    }
+
+    function formatTime12(hour, min) {
+      const period = hour >= 12 ? "PM" : "AM";
+      const h = hour % 12 || 12;
+      return h + ":" + pad(min) + " " + period;
+    }
+
+    function formatTime24(hour, min) {
+      return pad(hour) + ":" + pad(min);
+    }
+
+    // ── Initialize date input ──────────────────────────────────────
+    function initDateInput() {
+      const today = new Date();
+      dateInput.min = formatDate(today);
+      const maxDate = new Date();
+      maxDate.setDate(maxDate.getDate() + MAX_DAYS_OUT);
+      dateInput.max = formatDate(maxDate);
+    }
+
+    // ── Generate time slots ────────────────────────────────────────
+    function generateTimeSlots() {
+      timeGrid.innerHTML = "";
+      selectedTime = null;
+
+      const lastStartMinutes = (DAY_END_HOUR * 60) - selectedDuration;
+
+      for (let mins = DAY_START_HOUR * 60; mins <= lastStartMinutes; mins += SLOT_INCREMENT) {
+        const hour = Math.floor(mins / 60);
+        const min = mins % 60;
+        const time24 = formatTime24(hour, min);
+        const time12 = formatTime12(hour, min);
+
+        const label = document.createElement("label");
+        label.className = "time-slot";
+
+        label.innerHTML =
+          '<input type="radio" name="timeSlot" value="' + time24 + '">' +
+          '<span class="slot-check"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 7.5L5.5 11L12 3" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+          '<span class="slot-label">' + time12 + '</span>';
+
+        label.querySelector("input").addEventListener("change", function () {
+          selectedTime = this.value;
+        });
+
+        timeGrid.appendChild(label);
+      }
+
+      timeSlotsWrap.classList.add("visible");
+    }
+
+    // ── Duration change ────────────────────────────────────────────
+    durationRadios.forEach(function (radio) {
+      radio.addEventListener("change", function () {
+        selectedDuration = parseInt(this.value, 10);
+        if (dateInput.value && !isWeekend(dateInput.value)) {
+          generateTimeSlots();
+        }
+      });
+    });
+
+    // ── Date change ────────────────────────────────────────────────
+    function isWeekend(dateStr) {
+      const parts = dateStr.split("-");
+      const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+      const day = d.getDay();
+      return day === 0 || day === 6;
+    }
+
+    dateInput.addEventListener("change", function () {
+      if (!this.value) {
+        timeSlotsWrap.classList.remove("visible");
+        weekendMsg.style.display = "none";
+        return;
+      }
+
+      if (isWeekend(this.value)) {
+        weekendMsg.style.display = "block";
+        timeSlotsWrap.classList.remove("visible");
+        this.value = "";
+        return;
+      }
+
+      weekendMsg.style.display = "none";
+      generateTimeSlots();
+    });
+
+    // ── Form submit ────────────────────────────────────────────────
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("nameInput").value.trim();
+      const email = document.getElementById("emailInput").value.trim();
+      const date = dateInput.value;
+      const notes = document.getElementById("notesInput").value.trim();
+
+      if (!name || !email || !date || !selectedTime) {
+        alert("Please fill in all required fields and select a time slot.");
+        return;
+      }
+
+      const overlay = document.getElementById("processingOverlay");
+      const btn = form.querySelector("button");
+      btn.disabled = true;
+      overlay.style.display = "flex";
+
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          body: JSON.stringify({
+            name: name,
+            email: email,
+            date: date,
+            time: selectedTime,
+            duration: selectedDuration,
+            notes: notes
+          })
+        });
+      } catch (err) {
+        // no-cors mode — response is opaque, ignore errors
+      }
+
+      overlay.style.display = "none";
+
+      var success = document.createElement("div");
+      success.className = "success-screen";
+      success.innerHTML =
+        '<div class="success-check">' +
+        '  <svg viewBox="0 0 24 24"><path d="M4 12.5L9.5 18L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+        '</div>' +
+        '<div class="success-text">Session Booked!</div>' +
+        '<div class="success-sub">You\'ll receive a calendar invite shortly</div>';
+      document.body.appendChild(success);
+
+      setTimeout(function () { location.reload(); }, 2000);
+    });
+
+    // ── Init ───────────────────────────────────────────────────────
+    initDateInput();
+  </script>
+</body>
+</html>
